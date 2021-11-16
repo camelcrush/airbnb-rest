@@ -1,5 +1,4 @@
 from rest_framework.generics import RetrieveAPIView
-from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -25,7 +24,17 @@ class RoomsView(APIView):
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class SeeRoomView(RetrieveAPIView):
+class RoomView(APIView):
+    def get(self, request, pk):
+        try:
+            room = Room.objects.get(pk=pk)
+            serializer = ReadRoomSerializer(room)
+            return Response(serializer.data)
+        except Room.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-    queryset = Room.objects.all()
-    serializer_class = ReadRoomSerializer
+    def put(self, request):
+        pass
+
+    def delete(self, request):
+        pass
