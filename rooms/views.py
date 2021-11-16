@@ -9,13 +9,17 @@ from .serializers import ReadRoomSerializer, WriteRoomSerializer
 @api_view(["GET", "POST"])
 def rooms_view(request):
     if request.method == "GET":
-        rooms = Room.objects.all()
+        rooms = Room.objects.all()[:5]
         serializer = ReadRoomSerializer(rooms, many=True)
         return Response(serializer.data)
     elif request.method == "POST":
+        if not request.user.is_authenticated:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
         serializer = WriteRoomSerializer(request.data)
         if serializer.is_valid():
-            return Response(status=status.HTTP_200_OK)
+            room = serializer.save(user=request.user)
+            serializerd_room = ReadRoomSerializer(room)
+            return Response(data=serializerd_room.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
