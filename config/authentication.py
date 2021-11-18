@@ -5,7 +5,7 @@ from rest_framework import authentication
 from users.models import User
 
 
-class ExampleAuthentication(authentication.BaseAuthentication):
+class JWTAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
         try:
             token = request.META.get("HTTP_AUTHORIZATION")
