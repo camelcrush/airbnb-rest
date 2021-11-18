@@ -5,7 +5,7 @@ from .models import Room
 
 class RoomSerializer(serializers.ModelSerializer):
 
-    user = UserSerializer()
+    user = UserSerializer(read_only=True)
     is_fav = serializers.SerializerMethodField()
 
     class Meta:
