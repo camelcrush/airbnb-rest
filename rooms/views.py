@@ -6,10 +6,13 @@ from .models import Room
 from .serializers import RoomSerializer
 
 
+class OwnPagination(PageNumberPagination):
+    page_size = 20
+
+
 class RoomsView(APIView):
     def get(self, request):
-        paginator = PageNumberPagination()
-        paginator.page_size = 20
+        paginator = OwnPagination()
         rooms = Room.objects.all()
         results = paginator.paginate_queryset(rooms, request)
         serializer = RoomSerializer(results, many=True)
