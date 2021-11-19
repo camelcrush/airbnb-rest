@@ -52,5 +52,5 @@ class RoomViewset(ModelViewSet):
         except ValueError:
             rooms = Room.objects.all()
         results = paginator.paginate_queryset(rooms, request)
-        serializer = RoomSerializer(results, many=True)
+        serializer = RoomSerializer(results, many=True, context={"request": request})
         return paginator.get_paginated_response(serializer.data)

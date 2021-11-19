@@ -2,7 +2,6 @@ import jwt
 from django.conf import settings
 from django.contrib.auth import authenticate
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
@@ -52,7 +51,9 @@ class UsersViewSet(ModelViewSet):
     @action(detail=True)
     def favs(self, request, pk):
         user = self.get_object()
-        serializer = RoomSerializer(user.favs.all(), many=True)
+        serializer = RoomSerializer(
+            user.favs.all(), many=True, context={"request": request}
+        )
         return Response(serializer.data)
 
     @favs.mapping.put
