@@ -7,7 +7,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from rest_framework.permissions import AllowAny, IsAdminUser
 from .serializers import UserSerializer
 from rooms.serializers import RoomSerializer
 from rooms.models import Room
@@ -50,19 +50,15 @@ class UsersViewSet(ModelViewSet):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     @action(detail=True)
-    def favs(self, request):
+    def favs(self, request, pk):
         user = self.get_object()
         serializer = RoomSerializer(user.favs.all(), many=True)
         return Response(serializer.data)
 
-
-class FavsView(APIView):
-
-    permission_classes = [IsAuthenticated]
-
-    def put(self, request):
+    @favs.mapping.put
+    def toggle_favs(self, request, pk):
         pk = request.data.get("pk", None)
-        user = request.user
+        user = self.get_object()
         if pk is not None:
             try:
                 room = Room.objects.get(pk=pk)
