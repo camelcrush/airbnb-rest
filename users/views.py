@@ -33,6 +33,11 @@ class UsersViewSet(ModelViewSet):
             permission_classes = [IsSelf | IsAdminUser]
         return [permission() for permission in permission_classes]
 
+    #  When EB deploying,
+    #  container_commands:
+    #     03wsgipass:
+    #     command: 'echo "WSGIPassAuthorization On" >> ../wsgi.conf'
+
     @action(detail=False, methods=["post"])
     def login(self, request):
         username = request.data.get("username")
